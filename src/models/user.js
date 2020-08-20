@@ -17,6 +17,8 @@ const userSchema = new Schema({
     trim: true,
     unique: true,
   },
+  telegram: String,
+  active_company: { type: Schema.Types.ObjectId, ref: "Company" },
   password: String,
   social_auth: {
     type: mongoose.Schema.Types.Map,

@@ -5,6 +5,7 @@ import resJsonOnData from "libs/resJsonOnData"
 import cors from "cors"
 import morgan from "morgan"
 import { connectDb } from "./models"
+import { parseQueryString } from "libs/parsequery"
 
 
 // import cookieParser from "cookie-parser"
@@ -27,6 +28,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 app.use(resJsonOnData)
+app.use(parseQueryString)
+
 
 app.use("/alive", (req, res) => {
   return res.json("alive")

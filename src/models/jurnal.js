@@ -5,25 +5,33 @@ import { createSlug } from "libs/moggoseMiddleware"
 
 
 const $ = {
-  name: "Category",
+  name: "Jurnal",
 }
 
 $.schema = new Schema({
-  name: {
+  desc: {
     type: String,
+  },
+  company: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  account: {
+    type: Schema.Types.ObjectId,
+    ref: "Company",
+  },
+  value: {
+    type: Number,
     required: true,
   },
-  slug: {
+  ref: {
     type: String,
     required: true,
-    index: true,
-    trim: true,
-    unique: true,
   },
   possition: {
     type: String,
-    required: true,
-    trim: true,
+    enum: ["debet", "kredit"],
+
   }
 },
   {
@@ -40,3 +48,4 @@ const $model = model($.name, $.schema)
 $model.createIndexes()
 
 export default $model
+

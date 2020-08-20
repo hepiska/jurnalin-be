@@ -5,7 +5,7 @@ import { createSlug } from "libs/moggoseMiddleware"
 
 
 const $ = {
-  name: "Category",
+  name: "Company",
 }
 
 $.schema = new Schema({
@@ -13,17 +13,15 @@ $.schema = new Schema({
     type: String,
     required: true,
   },
-  slug: {
-    type: String,
-    required: true,
-    index: true,
-    trim: true,
-    unique: true,
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
   },
-  possition: {
+  status: {
     type: String,
     required: true,
     trim: true,
+    default: "active"
   }
 },
   {
@@ -40,3 +38,4 @@ const $model = model($.name, $.schema)
 $model.createIndexes()
 
 export default $model
+
