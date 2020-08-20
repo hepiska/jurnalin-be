@@ -26,7 +26,6 @@ const userControler = {
       await joi.validate(req.body, registerSchema)
       const userData = { ...req.body }
 
-
       const user = await userDa.create(userData)
 
       Reflect.deleteProperty(user, "password")

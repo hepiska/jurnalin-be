@@ -1,0 +1,4 @@
+NODE_ENV=development
+MONGO_URI=mongodb://xx:xx@localhost/kelak?authSource=admin
+SALTROUND=10
+SECRET=ikanpeda
