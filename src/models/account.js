@@ -5,38 +5,24 @@ import { createSlug } from "libs/moggoseMiddleware"
 
 
 const $ = {
-  name: "Jurnal",
+  name: "Account",
 }
 
 $.schema = new Schema({
+  account_no: {
+    type: String,
+  },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+  },
   desc: {
     type: String,
   },
-  company: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-  account: {
-    type: Schema.Types.ObjectId,
-    ref: "Company",
-  },
-  images: [String],
-  value: {
-    type: Number,
-    required: true,
-  },
-  ref: {
+  action_type: {
     type: String,
-    required: true,
+    enum: ["sale", "purchase", "expense"],
   },
-  possition: {
-    type: String,
-    enum: ["debet", "kredit"],
-  },
-  transaction_date: {
-    type: Date,
-    required: true,
-  }
 },
   {
     timestamps: {
