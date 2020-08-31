@@ -23,7 +23,7 @@ const loginSchema = joi.object().keys({
 const userControler = {
   register: async (req, res, next) => {
     try {
-      await joi.validate(req.body, registerSchema)
+      await joi.validate(req.body, registerSchema, { stripUnknown: true })
       const userData = { ...req.body }
 
       const user = await userDa.create(userData)
@@ -36,9 +36,32 @@ const userControler = {
       return next(error)
     }
   },
+  syncTelegram: async (req, res, next) => {
+    try {
+      const { user } = req
+
+      if (!req.body.telegram) {
+        throw new Error("there is no telegram")
+      }
+
+      const checktele = await userDa.find({ telegram: req.body.telegram }, { skip: 0, limit: 5 })
+
+      if (checktele.total) {
+        throw new Error("telegram telah di gunakan oleh akun lain")
+      }
+
+      const userRes = await userDa.findOneByID(user._id)
+
+      await userDa.update({ _id: userRes._id }, { ...userRes, telegram: req.body.telegram })
+
+      return res.json({ message: "sync telegram success" })
+    } catch (error) {
+      return next(error)
+    }
+  },
   login: async (req, res, next) => {
     try {
-      await joi.validate(req.body, loginSchema)
+      await joi.validate(req.body, loginSchema, { stripUnknown: true })
       const loginData = { ...req.body }
       const user = await userDa.findOneByEmail(loginData.email)
 
