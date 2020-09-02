@@ -53,6 +53,7 @@ function saltpassword(next) {
 
 userSchema.pre("save", saltpassword)
 
+
 const $model = mongoose.model("User", userSchema)
 
 $model.createIndexes()

@@ -5,6 +5,7 @@ import userDa from "dataAccess/user"
 import shortid from "shortid"
 import { sendMail } from "../libs/mail"
 const web_uri = process.env.WEB_URI
+const saltRounds = Number(process.env.SALTROUND)
 
 // import { user as userDa } from "dataAccess"
 
@@ -65,25 +66,29 @@ const userControler = {
   },
   resetPassword: async (req, res, next) => {
     try {
-      const { user } = req
-
-      if (!req.body.password) {
-        throw new Error("password kosong")
+      if (!req.body.password || !req.body.email) {
+        throw new Error("email atau password kosong")
       }
 
-      const userRes = await userDa.findOneByID(user._id)
+      const user = await userDa.findOneByEmail(req.body.email)
+
 
       const isPasswordMatch = bcrypt.compareSync(req.body.oldPassword, user.password)
+
 
       if (!isPasswordMatch) {
 
         throw new Error("ups ada masalah")
       }
 
-      await userDa.update({ _id: userRes._id }, { ...userRes, password: req.body.password })
+      const hashpassword = bcrypt.hashSync(req.body.password, saltRounds)
+
+
+      await userDa.update({ _id: user._id }, { ...user, password: hashpassword })
 
       return res.json({ message: "ganti password berhasil" })
     } catch (error) {
+
       return next(error)
     }
   },
@@ -98,16 +103,16 @@ const userControler = {
         throw new Error("tidak ada user dengan email ini")
       }
       const newPassword = shortid.generate()
+      const hashpassword = bcrypt.hashSync(newPassword, saltRounds)
 
-      await userDa.update({ _id: user._id }, { ...user, password: newPassword })
+      await userDa.update({ _id: user._id }, { ...user, password: hashpassword })
 
       await sendMail({ recipient: user.email,
         subject: "reset password",
-        message: `open this link to reset password ${web_uri}/reset-password?password=${newPassword}` })
+        message: `open this link to reset password ${web_uri}/reset-password?password=${newPassword}&email=${user.email}` })
 
       return res.json({ message: "kami telah mengirimkan email" })
     } catch (error) {
-      console.log("=====", error)
 
       return next(error)
     }
@@ -121,7 +126,10 @@ const userControler = {
       if (!user) {
         throw new Error("email or password un match")
       }
+
       const isPasswordMatch = bcrypt.compareSync(loginData.password, user.password)
+
+      console.log(loginData.password, user.password, isPasswordMatch)
 
       if (!isPasswordMatch) {
 
