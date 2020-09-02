@@ -2,6 +2,10 @@ import joi from "@hapi/joi"
 import bcrypt from "bcryptjs"
 import { signJwt } from "libs/jwt"
 import userDa from "dataAccess/user"
+import shortid from "shortid"
+import { sendMail } from "../libs/mail"
+const web_uri = process.env.WEB_URI
+
 // import { user as userDa } from "dataAccess"
 
 const registerSchema = joi.object().keys({
@@ -54,8 +58,57 @@ const userControler = {
 
       await userDa.update({ _id: userRes._id }, { ...userRes, telegram: req.body.telegram })
 
-      return res.json({ message: "sync telegram success" })
+      return res.json({ message: "menghubungkan telegram berhasil" })
     } catch (error) {
+      return next(error)
+    }
+  },
+  resetPassword: async (req, res, next) => {
+    try {
+      const { user } = req
+
+      if (!req.body.password) {
+        throw new Error("password kosong")
+      }
+
+      const userRes = await userDa.findOneByID(user._id)
+
+      const isPasswordMatch = bcrypt.compareSync(req.body.oldPassword, user.password)
+
+      if (!isPasswordMatch) {
+
+        throw new Error("ups ada masalah")
+      }
+
+      await userDa.update({ _id: userRes._id }, { ...userRes, password: req.body.password })
+
+      return res.json({ message: "ganti password berhasil" })
+    } catch (error) {
+      return next(error)
+    }
+  },
+  forgetPassword: async (req, res, next) => {
+    try {
+      if (!req.body.email) {
+        throw new Error("email kosong")
+      }
+      const user = await userDa.findOneByEmail(req.body.email)
+
+      if (!user) {
+        throw new Error("tidak ada user dengan email ini")
+      }
+      const newPassword = shortid.generate()
+
+      await userDa.update({ _id: user._id }, { ...user, password: newPassword })
+
+      await sendMail({ recipient: user.email,
+        subject: "reset password",
+        message: `open this link to reset password ${web_uri}/reset-password?password=${newPassword}` })
+
+      return res.json({ message: "kami telah mengirimkan email" })
+    } catch (error) {
+      console.log("=====", error)
+
       return next(error)
     }
   },
