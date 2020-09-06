@@ -12,6 +12,9 @@ $.schema = new Schema({
   account_no: {
     type: String,
   },
+  name: {
+    type: String,
+  },
   category: {
     type: Schema.Types.ObjectId,
     ref: "Category",

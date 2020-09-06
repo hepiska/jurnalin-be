@@ -3,9 +3,9 @@ import accountDa from "dataAccess/account"
 
 
 const accountSchema = joi.object().keys({
-  account_no: joi.string().required()
-    .required(),
-  desc: joi.number().required(),
+  name: joi.string().required(),
+  account_no: joi.string().required(),
+  desc: joi.string(),
   category: joi.string().required(),
 })
 
