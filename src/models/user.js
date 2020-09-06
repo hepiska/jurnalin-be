@@ -24,6 +24,9 @@ const userSchema = new Schema({
     type: mongoose.Schema.Types.Map,
     of: String
   },
+  subcribe_endat: {
+    type: Date
+  },
   roles: [String],
   profile_picture: String,
   guide: {
