@@ -6,6 +6,7 @@ const accountSchema = joi.object().keys({
   name: joi.string().required(),
   account_no: joi.string().required(),
   desc: joi.string(),
+  action_type: joi.string().required(),
   category: joi.string().required(),
 })
 
