@@ -77,10 +77,9 @@ const accountControllers = {
     }
 
   },
-  callback: async (req, res, next) => {
+  callback: (req, res, next) => {
     try {
-      console.log(req.query.invoice)
-
+      return res.json({ message: "sucess" })
 
     } catch (error) {
       return next(error)
