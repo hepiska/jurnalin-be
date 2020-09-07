@@ -16,7 +16,7 @@ var _models = require("./models");
 
 var _parsequery = require("libs/parsequery");
 
-var _botRoute = _interopRequireDefault(require("botRoute"));
+var _botroute = _interopRequireDefault(require("botroute"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
