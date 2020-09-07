@@ -6,7 +6,7 @@ import cors from "cors"
 import morgan from "morgan"
 import { connectDb } from "./models"
 import { parseQueryString } from "libs/parsequery"
-import botRoute from "botRoute"
+import botRoute from "botroute"
 
 
 // import cookieParser from "cookie-parser"
