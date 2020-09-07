@@ -12,13 +12,13 @@ $.schema = new Schema({
   desc: {
     type: String,
   },
-  company: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
   account: {
     type: Schema.Types.ObjectId,
-    ref: "Company",
+    ref: "Account",
   },
   images: [String],
   value: {
@@ -46,7 +46,6 @@ $.schema = new Schema({
   })
 
 
-$.schema.pre(["validate", "findOneAndUpdate"], createSlug)
 const $model = model($.name, $.schema)
 
 $model.createIndexes()
